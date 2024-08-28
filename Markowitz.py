@@ -1,3 +1,15 @@
+"""
+Implements Markowitz portfolio optimization model.
+
+Chooses the portfolio with the best return for a given risk by optimizing the sharpe ratio 
+[https://en.wikipedia.org/wiki/Sharpe_ratio] :
+E[R_a - R_f]/sigma_a
+for R_a the asset return (computed), R_f the risk free return (computed with given risk free interest rate) 
+and sigma_a the risk (standard deviation) of the asset.
+Essentially gives a net return / unit risk measurement.
+
+
+"""
 import pandas as pd
 import numpy as np 
 import yfinance as yf
@@ -89,9 +101,6 @@ class portfolio:
                                                                 * days, self.weights)))
         return np.array([portfolio_return, portfolio_volatility,
                          portfolio_return / portfolio_volatility])
-
-    def min_function_sharpe(self):
-        return -self.stats()[1]
 
     def optimize_portfolio(self):
         daily_returns = self.calc_return()
