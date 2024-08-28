@@ -1,3 +1,13 @@
+"""
+Computes value at risk measure for a given (collection of) assets.
+Takes user inputed number of days into the future (1 = tomorrow),
+confidence interval, and number of shares ('position').
+
+Prints out the VaR for the given inputs. VaR is a number is in a currency units
+which should be understood as meaning
+"With c*100 % confidence we will not lose more money than $ VaR in n days". 
+"""
+
 import numpy as np
 import yfinance as yf
 from scipy.stats import norm
@@ -47,9 +57,13 @@ def calculate_var_n(position, c, mu, sigma, n):
 
 if __name__ == '__main__':
     # Main 
+    """
+    Collects user inputs. Executes computations and prints outputs. 
+    Includes some checks on user inputs.
+    """
     start = datetime.datetime(2014, 1, 1)
     end = datetime.datetime(2021, 1, 1)
-    stocks = ['C','DB','AAPL']
+    stocks = ['C','DB','AAPL'] #TODO, make user input. 
     stock_data = download_data(stocks, start, end)
     for st in stocks:
         stock_data[st+' returns'] = np.log(stock_data[st] / stock_data[st].shift(1))
@@ -73,7 +87,8 @@ if __name__ == '__main__':
     # we assume that daily returns are normally distributed
         mu = np.mean(stock_data[st+' returns'])
         sigma = np.std(stock_data[st+' returns'])
-
+        
+        # "With c*100 % confidence we will not lose more money than $ VaR in n days". 
         print('Value at risk %f days into the future for %s is: $%0.2f' % (n, st, calculate_var_n(S, c, mu, sigma, n)))
 
 
